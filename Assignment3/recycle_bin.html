@@ -1,0 +1,55 @@
+{% extends 'template.html' %}
+{% block content %}
+		
+	 {% if user %} 
+	 
+	    <!-- class left -->	
+	 	<div id="sidebar">
+	 	<ul>
+
+	   	{% for i in bin %}
+	 		
+	   	 <li>
+	 		{% if i.file.dir %} 
+	 		<a> <img width="40%" src="/css/folder1.png" alt=" {{ i.file.dir.dirName }}" > <span>{{i.file.dir.dirName}}</span> </a> 
+		   	 <a href="/recyclebin/delete/folder/{{i.file.key.id()}}"> <img width="20px" src="/css/delete.png" alt="delete" title="Delete Permanantly"></a>  
+		   	 <a href="/recyclebin/restore/folder/{{i.file.key.id()}}"> <img width="20px" src="/css/restore.png" alt="restore" title="Restore Directory to Parent"></a>
+	  		 <div class="hideform">
+	  		     <p>Name: {{i.file.dir.dirName}}</p> 
+		  		 <p>Deleted: {{ i.file.TimeDeleted }} </p>
+		  		 <p>Location: {{i.path}}  </p>
+	  		 </div>
+	 		{% elif i.file.file %} 
+
+	 		<a> <img width="40%" src="/css/file11.png" alt=" {{ i.file.file.filename }}"> <span>{{i.file.file.filename}}</span> </a> 
+		   	 <a href="/recyclebin/delete/file/{{i.file.key.id()}}"> <img width="20px" src="/css/delete.png" alt="delete" title="Delete Permanently"></a>  
+		   	 <a href="/recyclebin/restore/file/{{i.file.key.id()}}"> <img width="20px" src="/css/restore.png" alt="restore" title="Restore File to Parent"></a>
+	   		  <div class="hideform">
+	  		     <p>Name: {{i.file.file.filename}}</p> 
+		  		 <p>Deleted: {{ i.file.TimeDeleted }} </p>
+		  		 <p>Location: {{i.path}}  </p>
+	  		 </div>
+			
+	 		{% endif %} 
+		</li>
+	   	
+	   	{% endfor %}
+   	  </ul>
+	   	  
+		</div>
+	 
+	 <div class="formright">
+	 
+	 	{% if error %}<p class="error"> {{error}} </p>{% endif %}
+		
+		{% if back %}<p><a href="{{back}}">Go back to directory</a></p>{% endif %}
+		<p>CWD Name: <strong>Recycle Bin </strong></p>
+		<p>Number of Items: <strong>{{bin|length}}</strong></p>
+			
+	 </div>
+	   
+	
+	   {% endif %}
+
+
+{% endblock %}

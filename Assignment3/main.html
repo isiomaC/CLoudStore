@@ -1,0 +1,146 @@
+{% extends 'template.html' %}
+{% block content %}
+		
+	 {% if user %} 
+	 
+	    <!-- class left -->	
+	 	<div id="sidebar">
+	 	
+	 	{% if search is defined %}
+			<ul>
+						
+		   	{% for i in search %}
+	         <li>
+	             <form action="/download" method="post">
+	             
+	               <input type="hidden" value="{{ i.index }}" name="index" />
+	                 <input type="hidden" value="{{ i.id }}" name="cwd" />
+	                 <button title="Download File" type="submit" name="Download" value="Download" class="btnC"> 
+	                  <img  width="40%" src="/css/file11.png"><span> {{ i.file }} </span>
+						</button> 
+	                  
+	                 <a class="delb" href="/delete/{{ i.id }}/{{ i.index }}"> <img width="20px" src="/css/delete.png" alt="delete" title="Move to Recycle Bin"></a> 
+	                <!--  <a href="/editF/{#i.id#}/{# i.index#}"> <img width="20px" height="20px" src="/css/edit1.png" alt="Edit" title="Change File Name"></a> -->
+	      
+	             </form>
+	             <div class="hideform">
+	             	<p>Name: {{i.file}}</p>
+	             	<p>Location: {{i.path}}</p>
+	             </div>
+	                	
+	   		</li>
+		   	{% endfor %}
+			</ul>
+			
+		{% else %}
+		 	<ul>
+	
+			   	{% for i in dirInWorkDir %}
+		
+			   	
+			   	 <li>
+			   	 <a href="/cwd/{{i.key.id()}}"> <img width="40%" src="/css/folder1.png" alt=" {{ i.dirName }}" > <span>{{i.dirName}}</span> </a> 
+			   	 <a class="delb" href="/cwddelete/{{workDir.key.id()}}/dir/{{ i.key.id() }}"> <img width="20px" src="/css/delete.png" alt="delete" title="Move to Recycle Bin"></a>  
+			   	 <!-- <a href="/edit/{#i.key.id()#}"> <img width="20px" height="20px" src="/css/edit1.png" alt="Edit" title="Change Directory Name"></a> -->
+					<form class="hideform" action="/cwd/{{workDir.key.id()}}" method="post">
+						<label>Change Directory Name</label>
+						<input type="hidden" value="{{ i.key.id() }}" name="dir_id"/>
+						<input required type="text" name="newDirName" value ="{{ i.dirName }}">
+						<button title="Save" type="submit" name="button" value="Change Name" class="btnCss">
+							<img width="30px" src="/css/save.png" />
+						</button>
+						<!-- <input type="submit" value="Change Name" name="button"/> -->
+					</form>
+			   	 </li>
+			   
+			   	{% endfor %}
+		   	  </ul>
+	   	  
+	
+	         <ul>
+	         {% for i in workDir.files %}
+	         <li>
+	             <form action="/download" method="post">
+	             
+	               <input type="hidden" value="{{ loop.index - 1 }}" name="index" />
+	                 <input type="hidden" value="{{ workDir.key.id() }}" name="cwd" />
+	                 <button title="Download File" type="submit" name="Download" value="Download" class="btnC"> 
+	                  <img  width="40%" src="/css/file11.png"><span> {{ i.filename }} </span>
+						 <!-- <img width="20px" height="20px" src="/css/dd.png" /> -->
+						</button> 
+	                  <!-- <input type="submit" value="Download" name="Download" /></li> -->
+	                  
+	                 <a class="delb" href="/cwddelete/{{workDir.key.id()}}/file/{{ loop.index-1 }}"> <img width="20px" src="/css/delete.png" alt="delete" title="Move to Recycle Bin"></a> 
+	                 <!-- <a href="/editF/{#workDir.key.id()#}/{# loop.index-1#}"> <img width="20px" height="20px" src="/css/edit1.png" alt="Edit" title="Rename Name"></a> -->
+	      
+	             </form>
+	             <form class="hideform" action="/cwd/{{workDir.key.id()}}" method="post">
+						<label>Change File Name</label>
+						<input type="hidden" value="{{ loop.index - 1 }}" name="index"/>
+						<input required type="text" name="newFileName" value ="{{ i.filename }}">
+						<button title="Save" type="submit" name="button" value="Change Name" class="btnCss">
+							<img width="30px" src="/css/save.png" />
+						</button>
+						<!-- <input type="submit" value="Change Name" name="button"/> -->
+					</form>
+			</li>
+	         {% endfor %}
+
+             </ul>
+		{% endif %}
+		</div>
+	 
+	 <div class="formright">
+
+	 	{% if error %}<p class="error"> {{error}} </p>{% endif %}
+		
+		<form action="/cwd/{{workDir.key.id()}}" method="post">
+			<input type="text" name="nametext" placeholder ="Search For File">
+			<button title="Search" type="submit" name="button" value="Search" class="btnCss">
+				<img width="30px" height="30px" src="/css/ss.png" />
+			</button>
+        
+		</form>
+		
+		<form action="/cwd/{{workDir.key.id()}}" method="post">
+			<input type="text" name="dirName" style="text-transform:lowercase" style="background-color:transparent" placeholder="Add Directory"/><!-- <input type="submit" name="button" value="Add" /> -->
+			<button title="Add Directory" type="submit" name="button" value="Add" class="btnCss">
+				<img width="30px" height="30px" src="/css/bgbtn_copy.png" />
+			</button>
+		</form>
+		
+				<!-- {# if errorSucess #}
+				<p class="success">Result(s) Found</p>
+				{# else #}
+				<p class="error">{{ errorSuccess }}</p>
+				{# endif #} -->
+				
+		<form action="{{ upload_url }}" method="post" enctype="multipart/form-data">
+			<input required id="formbtn" type="file" name="file"/>
+    <!--         <label class="fileContainer">
+    			Click here to Add File!
+    			<input type="file"/>
+			</label> -->
+             <button title="Add File" type="submit" class="btnCss">
+				<img width="30px" height="30px" src="/css/bgbtn2_copy.png" />
+			</button>
+            <!--  <input type="submit"/> -->
+	   </form>
+	 		<p>Go to Parent: {% if workDir != root %}
+	    
+			<a class="home" title="Go To Parent" href='/cwd/{{ workDir.parent_id }}'><strong>../</strong></a> </p>
+		
+				 {% endif %}
+		  	<p>CWD path: <strong>{{path}}</strong></p>		
+			<p>CWD Name: <strong>{{ workDir.dirName}} </strong></p>
+			<p>Number of Files: <strong>{{ workDir.files|length}} </strong></p>
+			<p>Number of Directories: <strong>{{ dirInWorkDir|length}} </strong></p>
+			<p>Created: <strong>{{ workDir.TimeCreated}} </strong></p>
+			
+	 </div>
+	   
+	
+	   {% endif %}
+
+
+{% endblock %}

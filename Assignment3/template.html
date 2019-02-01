@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Assignment 2</title>
+    <link rel="stylesheet" href="/css/style.css" type="text/css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body>
+    <header>
+      {% if user %}
+      <h1><a href='/'>CLOUDSTORE</a></h1>
+      <nav>
+      
+        <li><a href="/recyclebin"> Recycle Bin</a></li>
+        <li><a href="{{ logout_url }}"> {{ strlogout}}</a></li>
+      </nav>
+      {% endif %}
+
+    </header>
+    <section>
+      <div id='wrapper'>
+        {% block content %}
+        
+
+
+        {% endblock %}  
+        
+      </div>
+  </section>
+  <footer>
+    <large> ANOFIENAM ISIOMA &copy; 2962875</large>
+  </footer>
+  </body>
+</html>
